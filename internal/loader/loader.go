@@ -1,7 +1,6 @@
 package loader
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -51,16 +50,6 @@ func (l *Loader) getAllProj() error {
 		if end {
 			break
 		}
-	}
-
-	b, err := json.Marshal(l.projects)
-	if err != nil {
-		return err
-	}
-
-	err = write("res", b)
-	if err != nil {
-		return err
 	}
 
 	return nil

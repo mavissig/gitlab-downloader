@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 )
 
 func (l *Loader) reqGetProj(page int) (bool, error) {
@@ -89,8 +90,11 @@ func (l *Loader) reqDownloadProj(resFolderName, projName, branch, self string) e
 	defer resp.Body.Close()
 
 	dstFileName := fmt.Sprintf("%s/%s", resFolderName, projName)
+
+	validBranchName := strings.Replace(branch, "/", "-", -1)
+
 	if branch != "" {
-		dstFileName = fmt.Sprintf("%s-%s.zip", dstFileName, branch)
+		dstFileName = fmt.Sprintf("%s-%s.zip", dstFileName, validBranchName)
 	} else {
 		dstFileName = fmt.Sprintf("%s.zip", dstFileName)
 	}
