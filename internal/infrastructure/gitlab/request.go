@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"loader/internal/infrastructure/formatting"
+	"loader/internal/infrastructure/formating"
 	"net/http"
 	"net/url"
 	"os"
@@ -21,7 +21,7 @@ func ReqGetProj(inProj chan<- *entity.Proj, addr, token string, page int) (bool,
 
 	u, err := url.Parse(baseUrl)
 	if err != nil {
-		return false, fmt.Errorf("[REQUEST] %s ReqGetProj parsing url: %w", formatting.LogError(), err)
+		return false, fmt.Errorf("[REQUEST] %s", formating.LogError("ReqGetProj parsing url:", err.Error()))
 	}
 
 	params := url.Values{}
@@ -31,7 +31,7 @@ func ReqGetProj(inProj chan<- *entity.Proj, addr, token string, page int) (bool,
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		return false, fmt.Errorf("[REQUEST] %s ReqGetProj creating request: %w", formatting.LogError(), err)
+		return false, fmt.Errorf("[REQUEST] %s", formating.LogError("ReqGetProj creating request:", err.Error()))
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
@@ -40,13 +40,13 @@ func ReqGetProj(inProj chan<- *entity.Proj, addr, token string, page int) (bool,
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, fmt.Errorf("[REQUEST] %s ReqGetProj sending request: %w", formatting.LogError(), err)
+		return false, fmt.Errorf("[REQUEST] %s", formating.LogError("ReqGetProj sending request:", err.Error()))
 	}
 	defer resp.Body.Close()
 
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return false, fmt.Errorf("[REQUEST] %s ReqGetProj reading response body: %w", formatting.LogError(), err)
+		return false, fmt.Errorf("[REQUEST] %s", formating.LogError("ReqGetProj reading response body:", err.Error()))
 	}
 
 	if string(b) == "[]" {
@@ -57,7 +57,7 @@ func ReqGetProj(inProj chan<- *entity.Proj, addr, token string, page int) (bool,
 
 	err = json.Unmarshal(b, &p)
 	if err != nil {
-		return false, fmt.Errorf("[REQUEST] %s ReqGetProj unmarshalling response body: %w", formatting.LogError(), err)
+		return false, fmt.Errorf("[REQUEST] %s", formating.LogError("ReqGetProj unmarshalling response body:", err.Error()))
 	}
 
 	for _, proj := range p {

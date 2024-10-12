@@ -3,7 +3,7 @@ package usecase
 import (
 	"fmt"
 	"loader/internal/domain/entity"
-	"loader/internal/infrastructure/formatting"
+	"loader/internal/infrastructure/formating"
 	"loader/internal/infrastructure/gitlab"
 	"loader/internal/infrastructure/utils"
 	"log"
@@ -20,7 +20,7 @@ func DownloadValidate() error {
 	}
 	//err := gitlab.ReqValidateToken(entity.CFG["addr"].(string), entity.CFG["token"].(string))
 	//if err != nil {
-	//	log.Printf("[UC][VALIDATE] %s %s", format.LogError(), err)
+	//	log.Printf("[UC][VALIDATE] %s %s", format.SuffixError(), err)
 	//}
 	return nil
 }
@@ -53,7 +53,7 @@ func DownloadProjects() {
 
 	err := os.Mkdir(utils.NormalizePath(entity.CFG["output-dir"].(string)), 0777)
 	if err != nil {
-		log.Printf("[UC][DOWNLOAD_PROJECTS] %s %s", formatting.LogError(), err)
+		log.Printf("[UC][DOWNLOAD_PROJECTS] %s", formating.LogError(err.Error()))
 		return
 	}
 
