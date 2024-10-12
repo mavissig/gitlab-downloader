@@ -1,21 +1,27 @@
-package loader
+package gitlab
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"loader/internal/infrastructure/formatting"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+
+	"loader/internal/domain/entity"
 )
 
-func (l *Loader) reqGetProj(page int) (bool, error) {
-	baseUrl := fmt.Sprintf("%s/projects", l.cfg.Url)
+func ReqGetProj(inProj chan<- *entity.Proj, addr, token string, page int) (bool, error) {
+	baseUrl := strings.Join([]string{addr, "projects"}, "/")
+
+	// todo: debug
+	fmt.Println(baseUrl)
 
 	u, err := url.Parse(baseUrl)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("[REQUEST] %s ReqGetProj parsing url: %w", formatting.LogError(), err)
 	}
 
 	params := url.Values{}
@@ -25,41 +31,43 @@ func (l *Loader) reqGetProj(page int) (bool, error) {
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("[REQUEST] %s ReqGetProj creating request: %w", formatting.LogError(), err)
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", l.cfg.Token))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
 
 	client := http.Client{}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("[REQUEST] %s ReqGetProj sending request: %w", formatting.LogError(), err)
 	}
 	defer resp.Body.Close()
 
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("[REQUEST] %s ReqGetProj reading response body: %w", formatting.LogError(), err)
 	}
 
 	if string(b) == "[]" {
 		return true, nil
 	}
 
-	p := []*proj{}
+	p := []*entity.Proj{}
 
 	err = json.Unmarshal(b, &p)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("[REQUEST] %s ReqGetProj unmarshalling response body: %w", formatting.LogError(), err)
 	}
 
-	l.projects = append(l.projects, p...)
+	for _, proj := range p {
+		inProj <- proj
+	}
 
 	return false, nil
 }
 
-func (l *Loader) reqDownloadProj(resFolderName, projName, branch, self string) error {
+func ReqDownloadProj(token, resFolderName, projName, branch, self string) error {
 
 	baseUrl := fmt.Sprintf("%s/repository/archive.zip", self)
 
@@ -80,7 +88,7 @@ func (l *Loader) reqDownloadProj(resFolderName, projName, branch, self string) e
 		return err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", l.cfg.Token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
 	client := http.Client{}
 	resp, err := client.Do(req)
@@ -113,7 +121,7 @@ func (l *Loader) reqDownloadProj(resFolderName, projName, branch, self string) e
 	return nil
 }
 
-func (l *Loader) reqGetAllBranches(baseUrl string) ([]string, error) {
+func ReqGetAllBranches(baseUrl, token string) ([]string, error) {
 
 	u, err := url.Parse(baseUrl)
 	if err != nil {
@@ -125,7 +133,7 @@ func (l *Loader) reqGetAllBranches(baseUrl string) ([]string, error) {
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", l.cfg.Token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
 	client := http.Client{}
 	resp, err := client.Do(req)
