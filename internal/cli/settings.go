@@ -34,6 +34,25 @@ func registerTokenCmd() *cobra.Command {
 	return tokenCmd
 }
 
+func registerSetTokenCmd() *cobra.Command {
+	var (
+		set string
+	)
+
+	tokenCmd := &cobra.Command{
+		Use:   "set-token",
+		Short: "Установить токен",
+		Long:  "Установить токен для доступа к GitLab API и репозиториям. ",
+		Run: func(cmd *cobra.Command, args []string) {
+			usecase.SetToken(set)
+		},
+	}
+
+	tokenCmd.Flags().StringVarP(&set, "token", "t", "", "Передать токен для установки")
+
+	return tokenCmd
+}
+
 func registerRepoCmd() *cobra.Command {
 	var (
 		show bool
@@ -69,6 +88,7 @@ func registerRepoCmd() *cobra.Command {
 func init() {
 	AddCommands(
 		registerTokenCmd(),
+		registerSetTokenCmd(),
 		registerRepoCmd(),
 	)
 }

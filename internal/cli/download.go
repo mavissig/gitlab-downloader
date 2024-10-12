@@ -8,11 +8,6 @@ import (
 )
 
 func registerDownloadCmd() *cobra.Command {
-	//var (
-	//	info bool
-	//	set  string
-	//)
-
 	tokenCmd := &cobra.Command{
 		Use:   "download",
 		Short: "Скачать проекты",
@@ -25,9 +20,6 @@ func registerDownloadCmd() *cobra.Command {
 			usecase.DownloadProjects()
 		},
 	}
-
-	//tokenCmd.Flags().BoolVarP(&info, "info", "i", false, "Показать токен и дополнительную информацию")
-	//tokenCmd.Flags().StringVarP(&set, "set", "s", "", "Установить токен")
 
 	return tokenCmd
 }

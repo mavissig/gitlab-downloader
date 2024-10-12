@@ -62,14 +62,14 @@ gitlab-downloader [--help | -h]
 ## Изменение хоста
 ## Хост нужно указать в формате https://<host>/api/v4
 ## Пример: https://gitlab.com/api/v4
-gitlab-downloader addr -s <host>
+gitlab-downloader addr [--set | -s] <host>
 ```
 
 Устанавливаем токен
 ```bash
 ## Установка токена
-## Токен можно получить на странице настроек профиля в разделе Access Tokens
-gitlab-downloader token -s <token>
+## Токен можно получить через сайт gitlab на странице настроек профиля в разделе Access Tokens
+gitlab-downloader set-token -t <token>
 ```
 
 Скачиваем проекты
