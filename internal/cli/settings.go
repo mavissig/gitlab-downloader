@@ -55,13 +55,6 @@ func registerTokenCmd() *cobra.Command {
 			}
 		},
 	}
-
-	tokenCmd.SetHelpCommand(&cobra.Command{
-		Use: "help",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(helpMsg)
-		}
-	})
 	tokenCmd.Flags().StringVarP(&set, "set", "s", "", "Сохранить токен в конфиг")
 
 	return tokenCmd
