@@ -103,3 +103,18 @@ func LogSuccess(msg string) string {
 func LogWarning(msg string) string {
 	return fmt.Sprintf("%sWARNING%s %s", yellowBold, nc, msg)
 }
+
+/*
+-------------------------------------------------------
+		        CONVERT FUNCTIONS
+-------------------------------------------------------
+*/
+
+func MapToString(m map[string]any) string {
+	builder := strings.Builder{}
+	for k, v := range m {
+		builder.WriteString(fmt.Sprintf("%s: %v\n", k, v))
+	}
+
+	return builder.String()
+}

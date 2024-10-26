@@ -6,7 +6,8 @@ import (
 )
 
 var (
-	CFG map[string]any
+	CFG   map[string]any
+	TOKEN string
 )
 
 func init() {
@@ -16,6 +17,8 @@ func init() {
 	}
 
 	CFG = cfg
+
+	TOKEN = CFG["token"].(string)
 }
 
 type Proj struct {

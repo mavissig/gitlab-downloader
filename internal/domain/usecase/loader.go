@@ -15,13 +15,14 @@ func DownloadValidate() error {
 	if entity.CFG["addr"] == nil {
 		return fmt.Errorf("адрес GitLab не указан")
 	}
-	if entity.CFG["token"] == nil {
-		return fmt.Errorf("токен GitLab не указан")
+
+	if utils.IsEmpty(entity.TOKEN) {
+		if utils.IsEmpty(entity.CFG["token"].(string)) {
+			return fmt.Errorf(formating.LogError("токен не указан"))
+		}
+		entity.TOKEN = entity.CFG["token"].(string)
 	}
-	//err := gitlab.ReqValidateToken(entity.CFG["addr"].(string), entity.CFG["token"].(string))
-	//if err != nil {
-	//	log.Printf("[UC][VALIDATE] %s %s", format.SuffixError(), err)
-	//}
+
 	return nil
 }
 
@@ -33,7 +34,7 @@ func DownloadProjects() {
 	go func() {
 		defer wg.Done()
 		for i := 1; ; i++ {
-			end, err := gitlab.ReqGetProj(inProj, entity.CFG["addr"].(string), entity.CFG["token"].(string), i)
+			end, err := gitlab.ReqGetProj(inProj, entity.CFG["addr"].(string), entity.TOKEN, i)
 			if err != nil {
 				log.Printf("[UC][DOWNLOAD_PROJECTS]%s", err)
 				return
@@ -48,8 +49,6 @@ func DownloadProjects() {
 		wg.Wait()
 		close(inProj)
 	}()
-
-	fmt.Println("Normalize: ", utils.NormalizePath(entity.CFG["output-dir"].(string)))
 
 	err := os.Mkdir(utils.NormalizePath(entity.CFG["output-dir"].(string)), 0777)
 	if err != nil {
@@ -70,7 +69,7 @@ func downloadWorker(wg *sync.WaitGroup, outProj <-chan *entity.Proj) {
 	defer wg.Done()
 
 	for p := range outProj {
-		branches, err := gitlab.ReqGetAllBranches(p.Links.Branches, entity.CFG["token"].(string))
+		branches, err := gitlab.ReqGetAllBranches(p.Links.Branches, entity.TOKEN)
 		if err != nil {
 			log.Println("[DOWNLOAD][GET BRANCHES][ERROR]: ", err)
 			continue
@@ -85,7 +84,7 @@ func downloadWorker(wg *sync.WaitGroup, outProj <-chan *entity.Proj) {
 		}
 
 		for _, branch := range branches {
-			err = gitlab.ReqDownloadProj(entity.CFG["token"].(string), resFolderNameNew, p.Name, branch, p.Links.Self)
+			err = gitlab.ReqDownloadProj(entity.TOKEN, resFolderNameNew, p.Name, branch, p.Links.Self)
 			if err != nil {
 				log.Println("[DOWNLOAD][ERROR]: ", err)
 				continue

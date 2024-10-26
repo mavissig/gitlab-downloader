@@ -1,18 +1,45 @@
 package cli
 
 import (
+	"fmt"
 	"loader/internal/domain/usecase"
+	"loader/internal/infrastructure/formating"
 	"log"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
+/*
+   ---------------------------------------------
+				     MESSAGES
+   ---------------------------------------------
+*/
+
+var (
+	rootCmdLongMsg = fmt.Sprintf(`
+Утилита позволяет скачивать репозитории с GitLab по заданным настройкам
+
+Пример использования: %s
+
+Для получения подробной информации по настройкам воспользуйтесь командой: %s
+`,
+		formating.YellowBoldText("gitlab-downloader download -t <token>"),
+		formating.YellowBoldText("gitlab-downloader config --help"),
+	)
+)
+
+/*
+	---------------------------------------------
+					  COMMANDS
+	---------------------------------------------
+*/
+
 var (
 	rootCmd = &cobra.Command{
 		Use:   "gitlab-downloader",
-		Short: "Download gitlab repositories",
-		Long:  `Download gitlab repositories`,
+		Short: "Утилита для скачивания репозиториев с GitLab",
+		Long:  rootCmdLongMsg,
 	}
 )
 

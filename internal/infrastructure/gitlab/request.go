@@ -16,9 +16,6 @@ import (
 func ReqGetProj(inProj chan<- *entity.Proj, addr, token string, page int) (bool, error) {
 	baseUrl := strings.Join([]string{addr, "projects"}, "/")
 
-	// todo: debug
-	fmt.Println(baseUrl)
-
 	u, err := url.Parse(baseUrl)
 	if err != nil {
 		return false, fmt.Errorf("[REQUEST] %s", formating.LogError("ReqGetProj parsing url:", err.Error()))
