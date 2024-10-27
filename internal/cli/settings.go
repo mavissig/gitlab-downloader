@@ -52,6 +52,8 @@ func registerTokenCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if set != "" {
 				usecase.SetToken(set)
+			} else {
+				_ = cmd.Help()
 			}
 		},
 	}
@@ -78,6 +80,8 @@ func registerRepoCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if set != "" {
 				usecase.SetAddr(set)
+			} else {
+				_ = cmd.Help()
 			}
 		},
 	}
@@ -108,6 +112,8 @@ func registerOutputRepoCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if set != "" {
 				usecase.SetOutputDir(set)
+			} else {
+				_ = cmd.Help()
 			}
 		},
 	}
