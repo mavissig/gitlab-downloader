@@ -16,6 +16,11 @@ func SetAddr(val string) {
 	fmt.Println(formating.LogSuccess("Адрес установлен"))
 }
 
+func SetOutputDir(val string) {
+	viper.Set("output-dir", val)
+	fmt.Println(formating.LogSuccess("Директория установлена"))
+}
+
 func ShowRepoInfo() {
 
 }

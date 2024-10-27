@@ -87,6 +87,36 @@ func registerRepoCmd() *cobra.Command {
 	return addrCmd
 }
 
+func registerOutputRepoCmd() *cobra.Command {
+	helpMsg := fmt.Sprintf(`
+Текущая директория для сохранения репозиториев: %s
+
+Для изменения директории используйте команду %s
+`,
+		formating.YellowBoldText(viper.Get("output-dir").(string)),
+		formating.YellowBoldText("gitlab-downloader config output -s <путь>"),
+	)
+	var (
+		set string
+	)
+
+	outputCmd := &cobra.Command{
+		Use:   "output",
+		Short: "Управление директорией для сохранения репозиториев",
+		Long:  helpMsg,
+
+		Run: func(cmd *cobra.Command, args []string) {
+			if set != "" {
+				usecase.SetOutputDir(set)
+			}
+		},
+	}
+
+	outputCmd.Flags().StringVarP(&set, "set", "s", "", "Задать каталог для сохранения репозиториев")
+
+	return outputCmd
+}
+
 func init() {
 	configCmd := registerConfigCmd()
 
@@ -94,6 +124,7 @@ func init() {
 		configCmd,
 		registerTokenCmd(),
 		registerRepoCmd(),
+		registerOutputRepoCmd(),
 	)
 
 	AddCommands(
