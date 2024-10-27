@@ -8,7 +8,7 @@ import (
 )
 
 func registerDownloadCmd() *cobra.Command {
-	msg := `
+	helpMsg := fmt.Sprintf(`
 Скачать проекты по заданным настройкам
 
 Предустановленные настройки можно посмотреть командой:
@@ -18,13 +18,12 @@ gitlab-downloader config [ --help | -h ]
 
 Так же можно воспользоваться утилитой без сохранения настроек, передав токен напрямую:
 gitlab-downloader download -t <token>
-`
+`)
 	downloadCmd := &cobra.Command{
 		Use:   "download",
 		Short: "Скачать проекты",
-		Long:  fmt.Sprintf(msg),
+		Long:  helpMsg,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Println(entity.CFG)
 			return usecase.DownloadValidate()
 		},
 		Run: func(cmd *cobra.Command, args []string) {
