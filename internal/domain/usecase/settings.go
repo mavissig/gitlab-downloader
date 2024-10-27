@@ -11,6 +11,11 @@ func SetToken(val string) {
 	fmt.Println(formating.LogSuccess("Токен установлен"))
 }
 
+func SetAddr(val string) {
+	viper.Set("addr", val)
+	fmt.Println(formating.LogSuccess("Адрес установлен"))
+}
+
 func ShowRepoInfo() {
 
 }

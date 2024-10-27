@@ -65,7 +65,7 @@ func registerRepoCmd() *cobra.Command {
 		set string
 	)
 
-	tokenCmd := &cobra.Command{
+	addrCmd := &cobra.Command{
 		Use:   "addr",
 		Short: "Управление сервером",
 		Long: fmt.Sprintf(
@@ -77,14 +77,14 @@ func registerRepoCmd() *cobra.Command {
 
 		Run: func(cmd *cobra.Command, args []string) {
 			if set != "" {
-				usecase.SetToken(set)
+				usecase.SetAddr(set)
 			}
 		},
 	}
 
-	tokenCmd.Flags().StringVarP(&set, "set", "s", "", "Задать целевой сервер")
+	addrCmd.Flags().StringVarP(&set, "set", "s", "", "Задать целевой сервер")
 
-	return tokenCmd
+	return addrCmd
 }
 
 func init() {
