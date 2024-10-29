@@ -1,14 +1,18 @@
 # Gitlab Downloader
 
-Утилита для скачивания проектов из Gitlab.
+Author: [mavissig(Egor Kondratov)](https://github.com/mavissig)
 
 ## Introduction
+
+---
 
 В данной утилите реализовано скачивание проектов с Gitlab через gitlab-api.
 Так как данная утилита разрабатывалась для использования студентами School-21, то базовым хостом был выбран 
 `https://repos.21-school.ru/api/v4`
 
 ## About
+
+---
 
 Утилита работает с gitlab-api. 
 
@@ -22,15 +26,14 @@
 Basic:
 - сохранение всех проектов с заданными параметрами
 
-Server:
-- просмотреть настройки 
-- задать хост
-
-Token:
-- просмотреть токен
-- задать токен
+Config:
+- сохранить(изменить) токен
+- изменить адрес гитлаба
+- изменить целевой каталог(куда сохранятся скачанные проекты)
 
 ## Get started
+
+---
 
 Предполагается, что у пользователя установлен `Go`, `Git` и `Make`.
 
@@ -57,12 +60,12 @@ source ~/.zprofile
 Если вы не студент School-21,то запускаем утилиту в режиме справки для просмотра доступных команд или изменяем хост
 ```bash
 ## Просмотр доступных команд
-gitlab-downloader [--help | -h]
+gitlab-downloader --help
 
 ## Изменение хоста
 ## Хост нужно указать в формате https://<host>/api/v4
 ## Пример: https://gitlab.com/api/v4
-gitlab-downloader addr [--set | -s] <host>
+gitlab-downloader config addr --set <host>
 ```
 
 Устанавливаем токен
@@ -72,8 +75,13 @@ gitlab-downloader addr [--set | -s] <host>
 gitlab-downloader set-token -t <token>
 ```
 
+> токен сохранять не обязательно, его можно передать при скачивании через флаг `-t`
+> 
+> пример: \
+> `gitlab-downloader download -t You21AcCessTokEN`
+
 Скачиваем проекты
 ```bash
 ## Скачивание всех проектов
-gitlab-downloader download
+gitlab-downloader download [-t <token>]
 ```
